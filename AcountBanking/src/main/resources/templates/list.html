@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{/fragment/action:: fragment_action}"></div>
+	<table>
+		<tr>
+			<th>ID</th>
+			<th>Full-Name</th>
+			<th>Balance</th>
+		</tr>
+		<tr th:each="ls : ${ls}">
+			<td th:utext="${ls.id}"></td>
+			<td th:utext="${ls.fullName}"></td>
+			<td th:utext="${ls.balance}">...</td>
+		</tr>
+	</table>
+</body>
+</html>

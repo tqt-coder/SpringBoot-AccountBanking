@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+	<div th:replace="~{/fragment/action}"></div>
+	<h4>Send money</h4>
+	<ul th:each="row :${ls}">
+		<li ><span th:utext="${row.id}" ></span>- <span th:utext="${row.fullName}"></span></li>
+	</ul>
+	<form th:action="@{/sendMoney}" method="POST" th:object="${amountObject}">
+		<label>From Bank Account Id</label>
+		<input type="text" placeholder="Enter id person send to" th:field="*{idSend}"></br>
+		<label>To Bank Account Id</label>
+		<input type="text" th:field="*{idReceive}" placeholder="Enter id person receive">
+		</br><label>Amount</label>
+		<input type="text" placeholder="Enter money" th:field="*{amount}">
+		<button type="submit">Send</button> 
+	</form>
+</body>
+</html>

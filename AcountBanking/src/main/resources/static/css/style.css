@@ -1,0 +1,28 @@
+tr,th,td{
+	border: 1px solid #000;
+	text-align: center;
+}
+table{
+	border-collapse: collapse;
+}
+tr{
+	height: 50px;
+	
+}
+th,td{
+	width: 150px;
+}
+.send-money{
+	padding: 20px;
+	border: 1px solid #000;
+}
+.send-money a{
+	text-decoration: none;
+}
+.send-money a:nth-child(2n+1) {
+	padding-right: 20px;
+	border-right: 1px solid #000; 
+}
+.send-money a:nth-child(2n) {
+	padding-left: 20px;
+}
