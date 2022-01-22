@@ -9,6 +9,7 @@
 	<ul th:each="row :${ls}">
 		<li ><span th:utext="${row.id}" ></span>- <span th:utext="${row.fullName}"></span></li>
 	</ul>
+	<div th:if="${errorMessage != null}" th:utext="${errorMessage}" style="color:red; font-style:italic;"></div>
 	<form th:action="@{/sendMoney}" method="POST" th:object="${amountObject}">
 		<label>From Bank Account Id</label>
 		<input type="text" placeholder="Enter id person send to" th:field="*{idSend}"></br>

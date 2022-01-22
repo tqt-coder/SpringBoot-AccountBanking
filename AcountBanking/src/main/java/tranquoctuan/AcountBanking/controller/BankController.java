@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import tranquoctuan.AcountBanking.bean.AccountBean;
 import tranquoctuan.AcountBanking.bean.AmountBean;
 import tranquoctuan.AcountBanking.dao.BankDAO;
+import tranquoctuan.AcountBanking.exception.BankTransactionException;
 
 @Controller
 public class BankController {
@@ -27,6 +28,9 @@ public class BankController {
 	@RequestMapping(value= {"/sendMoney"}, method= RequestMethod.GET)
 	public String SendMoney(Model model) {
 		AmountBean amountObject = new AmountBean();
+		amountObject.setIdReceive(1);
+		amountObject.setIdSend(2);
+		amountObject.setAmount(100d);
 		List<AccountBean> ls = bankDao.listAccount();
 		model.addAttribute("ls",ls);
 		model.addAttribute("amountObject",amountObject);
@@ -34,12 +38,20 @@ public class BankController {
 	}
 	
 	@RequestMapping(value= {"/sendMoney"}, method= RequestMethod.POST)
-	public String PostMoney(Model model, @ModelAttribute("amountObject") AmountBean amountObj) {
-		System.out.println(amountObj.getAmount());
-		if(amountObj.getIdSend() > 0 && amountObj.getIdReceive() > 0 && amountObj.getAmount() > 0) {
+	public String PostMoney(Model model,   @ModelAttribute("amountObject") AmountBean  amountObject) {
+		System.out.println(amountObject.getAmount());
+		if(amountObject.getIdSend() > 0 && amountObject.getIdReceive() > 0 && amountObject.getAmount() > 0) {
+			try {
+				bankDao.sendMoney(amountObject.getIdSend(), amountObject.getIdReceive(), amountObject.getAmount());
+			} catch (BankTransactionException e) {
+				// TODO Auto-generated catch block
+				model.addAttribute("errorMessage","Error "+e.getMessage());
+			}
 			
-			System.out.println("Nhập thành công");
+		}else {
+			model.addAttribute("errorMessage","The input data is required");
+			return "sendMoney";
 		}
-		return "sendMoney";
+		return "redirect:/";
 	}
 }

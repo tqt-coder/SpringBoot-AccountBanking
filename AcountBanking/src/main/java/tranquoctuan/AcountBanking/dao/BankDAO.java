@@ -6,12 +6,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mapping.AccessOptions.SetOptions.Propagation;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import tranquoctuan.AcountBanking.bean.AccountBean;
 import tranquoctuan.AcountBanking.entity.AccountEntity;
+import tranquoctuan.AcountBanking.exception.BankTransactionException;
 
 @Repository
+@Transactional
 public class BankDAO {
 	@Autowired
 	private EntityManager entityManage;
@@ -30,6 +34,27 @@ public class BankDAO {
 	Query query = entityManage.createQuery(sql,AccountBean.class);
 	
 	return 	query.getResultList();			
+	}
+	@Transactional(rollbackFor = BankTransactionException.class)
+	public void sendMoney(int idSend, int idReceive, double amount) throws BankTransactionException{
+		
+		addAmount(idReceive, amount);
+		addAmount(idSend, -amount);
+	}
+
+	@Transactional()
+	private void addAmount(int id, double amount) throws BankTransactionException{
+		// TODO Auto-generated method stub
+		
+		AccountEntity account = this.findById(id);
+		if(account == null) {
+			throw new BankTransactionException("The account not found "+ id);
+		}
+		double temp = account.getBalance() + amount ;
+		if(temp < 0) {
+			throw new BankTransactionException("The money in account "+ id+ " is enough("+ account.getBalance()+" )");
+		}
+		account.setBalance(temp);
 	}
 
 }
